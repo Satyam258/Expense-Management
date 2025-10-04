@@ -2,17 +2,10 @@ import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema(
   {
-    // admin_id: {
-    //   type: String,
-    //   required: true,
-    //   unique: true,
-    //   trim: true,
-    // },
     company: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'Company',
-      
     },
     name: {
       type: String,
@@ -44,4 +37,5 @@ const adminSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('Admin', adminSchema);
+const Admin = mongoose.model('Admin', adminSchema);
+export default Admin;

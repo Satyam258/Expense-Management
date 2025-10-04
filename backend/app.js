@@ -1,5 +1,7 @@
 import express from "express";
 import cors from 'cors'
+import companyAdminRoutes from  "./src/routes/adminCompanyRoutes.js"
+import userRoutes from  "./src/routes/userRouter.js"
 const app = express();
 
 app.use(cors({
@@ -14,5 +16,8 @@ app.use(express.urlencoded({
     limit:"16kb"
 }))
 
+
+app.use("/api/company-admin",companyAdminRoutes)
+app.use("/api/users",userRoutes);
 
 export {app};
