@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Card,
   CardContent,
@@ -42,12 +43,21 @@ export const ManageUsers = () => {
     status: 'active'
   });
 
+  // Open dialog for adding a new user
   const handleAdd = () => {
     setEditMode(false);
-    setFormData({ name: '', email: '', role: 'employee', department: '', status: 'active' });
+    setCurrentUser(null);
+    setFormData({
+      name: '',
+      email: '',
+      role: 'employee',
+      department: '',
+      status: 'active'
+    });
     setDialogOpen(true);
   };
 
+  // Open dialog for editing existing user
   const handleEdit = (user) => {
     setEditMode(true);
     setCurrentUser(user);
@@ -55,20 +65,34 @@ export const ManageUsers = () => {
     setDialogOpen(true);
   };
 
+  // Delete user locally
   const handleDelete = (id) => {
     setUsers(users.filter(u => u.id !== id));
   };
 
-  const handleSave = () => {
-    if (editMode && currentUser) {
-      setUsers(users.map(u => (u.id === currentUser.id ? { ...u, ...formData } : u)));
-    } else {
-      const newUser = { id: Date.now().toString(), ...formData };
-      setUsers([...users, newUser]);
+  // Save user (add new or update existing)
+  const handleSave = async () => {
+    try {
+      if (editMode && currentUser) {
+        // Update locally for edit
+        setUsers(users.map(u => (u.id === currentUser.id ? { ...u, ...formData } : u)));
+      } else {
+        // Add new user via backend
+        const response = await axios.post('http://localhost:4000/api/users', formData, {
+          withCredentials: true,
+        });
+        const newUser = response.data;
+
+        setUsers([...users, newUser]);
+      }
+      setDialogOpen(false);
+    } catch (error) {
+      console.error('Error saving user:', error);
+      alert('Failed to save user. Check console for details.');
     }
-    setDialogOpen(false);
   };
 
+  // Assign color for roles
   const getRoleColor = (role) => {
     switch (role) {
       case 'admin': return 'error';
@@ -88,7 +112,7 @@ export const ManageUsers = () => {
         <Button
           variant="contained"
           startIcon={<PlusCircle className="w-5 h-5" />}
-          onClick={handleAdd}
+          onClick={handleAdd} // only opens dialog
           sx={{
             bgcolor: 'rgb(37, 99, 235)',
             '&:hover': { bgcolor: 'rgb(29, 78, 216)' },
@@ -204,7 +228,7 @@ export const ManageUsers = () => {
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)} sx={{ textTransform: 'none' }}>Cancel</Button>
           <Button
-            onClick={handleSave}
+            onClick={handleSave} // save logic calls backend
             variant="contained"
             sx={{
               bgcolor: 'rgb(37, 99, 235)',

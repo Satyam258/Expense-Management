@@ -66,6 +66,24 @@ export const SubmitExpense = () => {
         <Card className="shadow-lg rounded-xl">
           <CardContent className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* File Upload */}
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors space-y-2">
+                <input
+                  type="file"
+                  id="receipt"
+                  className="hidden"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  accept="image/*,.pdf"
+                />
+                <label htmlFor="receipt" className="cursor-pointer">
+                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600">
+                    {file ? file.name : 'Click to upload receipt'}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">PNG, JPG, PDF up to 10MB</p>
+                </label>
+              </div>
+              
               {/* Expense Title */}
               <div className="space-y-2">
                 <TextField
@@ -121,23 +139,6 @@ export const SubmitExpense = () => {
                 </FormControl>
               </div>
 
-              {/* File Upload */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors space-y-2">
-                <input
-                  type="file"
-                  id="receipt"
-                  className="hidden"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  accept="image/*,.pdf"
-                />
-                <label htmlFor="receipt" className="cursor-pointer">
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">
-                    {file ? file.name : 'Click to upload receipt'}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">PNG, JPG, PDF up to 10MB</p>
-                </label>
-              </div>
 
               {/* Buttons */}
               <div className="flex flex-col md:flex-row gap-4">
