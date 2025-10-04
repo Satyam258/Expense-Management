@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Card,
   CardContent,
-  Button,
+  Chip,
   Table,
   TableBody,
   TableCell,
@@ -19,37 +19,16 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Chip,
+  Button,
   IconButton
 } from '@mui/material';
 import { PlusCircle, CreditCard as Edit, Trash2 } from 'lucide-react';
 
 export const ManageUsers = () => {
   const [users, setUsers] = useState([
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john@company.com',
-      role: 'employee',
-      department: 'Engineering',
-      status: 'active'
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      email: 'jane@company.com',
-      role: 'manager',
-      department: 'Sales',
-      status: 'active'
-    },
-    {
-      id: '3',
-      name: 'Bob Johnson',
-      email: 'bob@company.com',
-      role: 'employee',
-      department: 'Marketing',
-      status: 'active'
-    }
+    { id: '1', name: 'John Doe', email: 'john@company.com', role: 'employee', department: 'Engineering', status: 'active' },
+    { id: '2', name: 'Jane Smith', email: 'jane@company.com', role: 'manager', department: 'Sales', status: 'active' },
+    { id: '3', name: 'Bob Johnson', email: 'bob@company.com', role: 'employee', department: 'Marketing', status: 'active' }
   ]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -84,10 +63,7 @@ export const ManageUsers = () => {
     if (editMode && currentUser) {
       setUsers(users.map(u => (u.id === currentUser.id ? { ...u, ...formData } : u)));
     } else {
-      const newUser = {
-        id: Date.now().toString(),
-        ...formData
-      };
+      const newUser = { id: Date.now().toString(), ...formData };
       setUsers([...users, newUser]);
     }
     setDialogOpen(false);
@@ -95,17 +71,15 @@ export const ManageUsers = () => {
 
   const getRoleColor = (role) => {
     switch (role) {
-      case 'admin':
-        return 'error';
-      case 'manager':
-        return 'primary';
-      default:
-        return 'default';
+      case 'admin': return 'error';
+      case 'manager': return 'primary';
+      default: return 'default';
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 max-w-7xl mx-auto">
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Manage Users</h1>
@@ -125,34 +99,28 @@ export const ManageUsers = () => {
         </Button>
       </div>
 
-      <Card>
+      {/* Users Table */}
+      <Card className="shadow-lg rounded-lg">
         <CardContent className="p-0">
           <TableContainer component={Paper} elevation={0}>
             <Table>
-              <TableHead>
-                <TableRow sx={{ bgcolor: 'rgb(249, 250, 251)' }}>
-                  <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Role</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Department</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }} align="right">Actions</TableCell>
+              <TableHead className="bg-gray-100">
+                <TableRow>
+                  <TableCell className="font-semibold">Name</TableCell>
+                  <TableCell className="font-semibold">Email</TableCell>
+                  <TableCell className="font-semibold">Role</TableCell>
+                  <TableCell className="font-semibold">Department</TableCell>
+                  <TableCell className="font-semibold">Status</TableCell>
+                  <TableCell className="font-semibold" align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id} hover>
-                    <TableCell>
-                      <p className="font-medium text-gray-900">{user.name}</p>
-                    </TableCell>
+                {users.map(user => (
+                  <TableRow key={user.id} hover className="even:bg-gray-50">
+                    <TableCell><p className="font-medium text-gray-900">{user.name}</p></TableCell>
                     <TableCell className="text-gray-700">{user.email}</TableCell>
                     <TableCell>
-                      <Chip
-                        label={user.role.toUpperCase()}
-                        color={getRoleColor(user.role)}
-                        size="small"
-                        sx={{ fontWeight: 600 }}
-                      />
+                      <Chip label={user.role.toUpperCase()} color={getRoleColor(user.role)} size="small" sx={{ fontWeight: 600 }} />
                     </TableCell>
                     <TableCell className="text-gray-700">{user.department}</TableCell>
                     <TableCell>
@@ -165,18 +133,10 @@ export const ManageUsers = () => {
                     </TableCell>
                     <TableCell align="right">
                       <div className="flex gap-2 justify-end">
-                        <IconButton
-                          size="small"
-                          onClick={() => handleEdit(user)}
-                          sx={{ color: 'rgb(37, 99, 235)' }}
-                        >
+                        <IconButton size="small" onClick={() => handleEdit(user)} sx={{ color: 'rgb(37, 99, 235)' }}>
                           <Edit className="w-4 h-4" />
                         </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDelete(user.id)}
-                          sx={{ color: 'rgb(239, 68, 68)' }}
-                        >
+                        <IconButton size="small" onClick={() => handleDelete(user.id)} sx={{ color: 'rgb(239, 68, 68)' }}>
                           <Trash2 className="w-4 h-4" />
                         </IconButton>
                       </div>
@@ -189,15 +149,17 @@ export const ManageUsers = () => {
         </CardContent>
       </Card>
 
+      {/* Add/Edit Dialog */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{editMode ? 'Edit User' : 'Add New User'}</DialogTitle>
         <DialogContent>
-          <div className="space-y-4 pt-4">
+          <div className="pt-4">
             <TextField
               fullWidth
               label="Full Name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              margin="normal"
             />
             <TextField
               fullWidth
@@ -205,8 +167,9 @@ export const ManageUsers = () => {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              margin="normal"
             />
-            <FormControl fullWidth>
+            <FormControl fullWidth margin="normal">
               <InputLabel>Role</InputLabel>
               <Select
                 value={formData.role}
@@ -223,8 +186,9 @@ export const ManageUsers = () => {
               label="Department"
               value={formData.department}
               onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+              margin="normal"
             />
-            <FormControl fullWidth>
+            <FormControl fullWidth margin="normal">
               <InputLabel>Status</InputLabel>
               <Select
                 value={formData.status}
@@ -238,9 +202,7 @@ export const ManageUsers = () => {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)} sx={{ textTransform: 'none' }}>
-            Cancel
-          </Button>
+          <Button onClick={() => setDialogOpen(false)} sx={{ textTransform: 'none' }}>Cancel</Button>
           <Button
             onClick={handleSave}
             variant="contained"
@@ -254,6 +216,6 @@ export const ManageUsers = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
-  );
+    </div>
+  );
 };

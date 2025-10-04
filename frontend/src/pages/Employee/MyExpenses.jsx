@@ -51,89 +51,92 @@ export const MyExpenses = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Expenses</h1>
-          <p className="text-gray-600 mt-2">Track and manage your submitted expenses</p>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <div className="mb-4 md:mb-0">
+            <h1 className="text-3xl font-bold text-gray-900">My Expenses</h1>
+            <p className="text-gray-600 mt-2">Track and manage your submitted expenses</p>
+          </div>
+          <Button
+            variant="contained"
+            startIcon={<PlusCircle className="w-5 h-5" />}
+            onClick={() => navigate('/employee/submit')}
+            sx={{
+              bgcolor: 'rgb(37, 99, 235)',
+              '&:hover': { bgcolor: 'rgb(29, 78, 216)' },
+              textTransform: 'none'
+            }}
+          >
+            Submit New
+          </Button>
         </div>
-        <Button
-          variant="contained"
-          startIcon={<PlusCircle className="w-5 h-5" />}
-          onClick={() => navigate('/employee/submit')}
-          sx={{
-            bgcolor: 'rgb(37, 99, 235)',
-            '&:hover': { bgcolor: 'rgb(29, 78, 216)' },
-            textTransform: 'none'
-          }}
-        >
-          Submit New
-        </Button>
-      </div>
 
-      <Card>
-        <CardContent className="p-0">
-          {myExpenses.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">No expenses submitted yet</p>
-              <Button
-                variant="outlined"
-                onClick={() => navigate('/employee/submit')}
-                sx={{ textTransform: 'none' }}
-              >
-                Submit Your First Expense
-              </Button>
-            </div>
-          ) : (
-            <TableContainer component={Paper} elevation={0}>
-              <Table>
-                <TableHead>
-                  <TableRow sx={{ bgcolor: 'rgb(249, 250, 251)' }}>
-                    <TableCell sx={{ fontWeight: 600 }}>Title</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Amount</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Submitted</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {myExpenses.map((expense) => (
-                    <TableRow key={expense.id} hover>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium text-gray-900">{expense.title}</p>
-                          {expense.description && (
-                            <p className="text-sm text-gray-500">{expense.description}</p>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span className="capitalize text-gray-700">{expense.category}</span>
-                      </TableCell>
-                      <TableCell>
-                        <span className="font-medium text-gray-900">
-                          {formatAmount(expense.amount)}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={expense.status.toUpperCase()}
-                          color={getStatusColor(expense.status)}
-                          size="small"
-                          sx={{ fontWeight: 600 }}
-                        />
-                      </TableCell>
-                      <TableCell className="text-gray-600">
-                        {formatDate(expense.submittedAt)}
-                      </TableCell>
+        <Card className="shadow-lg rounded-xl">
+          <CardContent className="p-0">
+            {myExpenses.length === 0 ? (
+              <div className="text-center py-16 bg-gray-50 rounded-xl">
+                <p className="text-gray-500 mb-4">No expenses submitted yet</p>
+                <Button
+                  variant="outlined"
+                  onClick={() => navigate('/employee/submit')}
+                  sx={{ textTransform: 'none' }}
+                >
+                  Submit Your First Expense
+                </Button>
+              </div>
+            ) : (
+              <TableContainer component={Paper} elevation={0}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ bgcolor: 'rgb(249, 250, 251)' }}>
+                      <TableCell sx={{ fontWeight: 600 }}>Title</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Amount</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Submitted</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
+                  </TableHead>
+                  <TableBody>
+                    {myExpenses.map((expense) => (
+                      <TableRow key={expense.id} hover>
+                        <TableCell>
+                          <div>
+                            <p className="font-medium text-gray-900">{expense.title}</p>
+                            {expense.description && (
+                              <p className="text-sm text-gray-500">{expense.description}</p>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <span className="capitalize text-gray-700">{expense.category}</span>
+                        </TableCell>
+                        <TableCell>
+                          <span className="font-medium text-gray-900">
+                            {formatAmount(expense.amount)}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            label={expense.status.toUpperCase()}
+                            color={getStatusColor(expense.status)}
+                            size="small"
+                            sx={{ fontWeight: 600 }}
+                          />
+                        </TableCell>
+                        <TableCell className="text-gray-600">
+                          {formatDate(expense.submittedAt)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 };

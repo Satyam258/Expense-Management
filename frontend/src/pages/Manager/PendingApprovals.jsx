@@ -47,47 +47,42 @@ export const PendingApprovals = () => {
     }
   };
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
-  };
 
-  const formatAmount = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+  const formatAmount = (amount) =>
+    new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
     }).format(amount);
-  };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 max-w-7xl mx-auto">
+      {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Pending Approvals</h1>
-        <p className="text-gray-600 mt-2">
-          Review and approve team expense submissions
-        </p>
+        <p className="text-gray-600 mt-2">Review and approve team expense submissions</p>
       </div>
 
-      {/* Summary cards */}
+      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card>
+        <Card className="bg-yellow-50 shadow rounded-lg">
           <CardContent className="flex items-center gap-4 p-6">
             <div className="bg-yellow-100 p-3 rounded-full">
               <AlertCircle className="w-6 h-6 text-yellow-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">
-                {pendingExpenses.length}
-              </p>
+              <p className="text-2xl font-bold text-gray-900">{pendingExpenses.length}</p>
               <p className="text-sm text-gray-600">Pending</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-green-50 shadow rounded-lg">
           <CardContent className="flex items-center gap-4 p-6">
             <div className="bg-green-100 p-3 rounded-full">
               <CheckCircle className="w-6 h-6 text-green-600" />
@@ -101,7 +96,7 @@ export const PendingApprovals = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-red-50 shadow rounded-lg">
           <CardContent className="flex items-center gap-4 p-6">
             <div className="bg-red-100 p-3 rounded-full">
               <XCircle className="w-6 h-6 text-red-600" />
@@ -117,7 +112,7 @@ export const PendingApprovals = () => {
       </div>
 
       {/* Table */}
-      <Card>
+      <Card className="shadow-lg rounded-lg">
         <CardContent className="p-0">
           {pendingExpenses.length === 0 ? (
             <div className="text-center py-12">
@@ -128,13 +123,13 @@ export const PendingApprovals = () => {
             <TableContainer component={Paper} elevation={0}>
               <Table>
                 <TableHead>
-                  <TableRow sx={{ bgcolor: 'rgb(249, 250, 251)' }}>
-                    <TableCell sx={{ fontWeight: 600 }}>Employee</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Expense</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Amount</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Submitted</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }} align="right">
+                  <TableRow className="bg-gray-100">
+                    <TableCell className="font-semibold">Employee</TableCell>
+                    <TableCell className="font-semibold">Expense</TableCell>
+                    <TableCell className="font-semibold">Category</TableCell>
+                    <TableCell className="font-semibold">Amount</TableCell>
+                    <TableCell className="font-semibold">Submitted</TableCell>
+                    <TableCell className="font-semibold" align="right">
                       Actions
                     </TableCell>
                   </TableRow>
@@ -143,35 +138,23 @@ export const PendingApprovals = () => {
                   {pendingExpenses.map((expense) => (
                     <TableRow key={expense.id} hover>
                       <TableCell>
-                        <p className="font-medium text-gray-900">
-                          {expense.employeeName}
-                        </p>
+                        <p className="font-medium text-gray-900">{expense.employeeName}</p>
                       </TableCell>
                       <TableCell>
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {expense.title}
-                          </p>
+                        <div className="space-y-1">
+                          <p className="font-medium text-gray-900">{expense.title}</p>
                           {expense.description && (
-                            <p className="text-sm text-gray-500">
-                              {expense.description}
-                            </p>
+                            <p className="text-sm text-gray-500">{expense.description}</p>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className="capitalize text-gray-700">
-                          {expense.category}
-                        </span>
+                        <span className="capitalize text-gray-700">{expense.category}</span>
                       </TableCell>
                       <TableCell>
-                        <span className="font-medium text-gray-900">
-                          {formatAmount(expense.amount)}
-                        </span>
+                        <span className="font-medium text-gray-900">{formatAmount(expense.amount)}</span>
                       </TableCell>
-                      <TableCell className="text-gray-600">
-                        {formatDate(expense.submittedAt)}
-                      </TableCell>
+                      <TableCell className="text-gray-600">{formatDate(expense.submittedAt)}</TableCell>
                       <TableCell align="right">
                         <div className="flex gap-2 justify-end">
                           <Button
@@ -203,19 +186,12 @@ export const PendingApprovals = () => {
         </CardContent>
       </Card>
 
-      {/* Approval dialog */}
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          {actionType === 'approve' ? 'Approve Expense' : 'Reject Expense'}
-        </DialogTitle>
+      {/* Approval Dialog */}
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>{actionType === 'approve' ? 'Approve Expense' : 'Reject Expense'}</DialogTitle>
         <DialogContent>
-          <div className="pt-4">
-            <p className="text-gray-700 mb-4">
+          <div className="pt-4 space-y-4">
+            <p className="text-gray-700">
               {selectedExpense?.title} -{' '}
               {selectedExpense ? formatAmount(selectedExpense.amount) : ''}
             </p>

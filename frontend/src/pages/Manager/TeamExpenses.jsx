@@ -37,46 +37,46 @@ export const TeamExpenses = () => {
     }
   };
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
-  };
 
-  const formatAmount = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+  const formatAmount = (amount) =>
+    new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
     }).format(amount);
-  };
 
   const totalAmount = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 max-w-7xl mx-auto">
+      {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Team Expenses</h1>
         <p className="text-gray-600 mt-2">View and track all team expense submissions</p>
       </div>
 
+      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card>
+        <Card className="bg-white shadow rounded-lg">
           <CardContent className="p-6">
             <p className="text-sm text-gray-600 mb-1">Total Expenses</p>
             <p className="text-3xl font-bold text-gray-900">{filteredExpenses.length}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white shadow rounded-lg">
           <CardContent className="p-6">
             <p className="text-sm text-gray-600 mb-1">Total Amount</p>
             <p className="text-3xl font-bold text-gray-900">{formatAmount(totalAmount)}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white shadow rounded-lg">
           <CardContent className="p-6">
             <FormControl fullWidth size="small">
               <InputLabel>Filter by Status</InputLabel>
@@ -95,7 +95,8 @@ export const TeamExpenses = () => {
         </Card>
       </div>
 
-      <Card>
+      {/* Expenses Table */}
+      <Card className="shadow-lg rounded-lg">
         <CardContent className="p-0">
           {filteredExpenses.length === 0 ? (
             <div className="text-center py-12">
@@ -104,24 +105,24 @@ export const TeamExpenses = () => {
           ) : (
             <TableContainer component={Paper} elevation={0}>
               <Table>
-                <TableHead>
-                  <TableRow style={{ backgroundColor: 'rgb(249, 250, 251)' }}>
-                    <TableCell style={{ fontWeight: 600 }}>Employee</TableCell>
-                    <TableCell style={{ fontWeight: 600 }}>Title</TableCell>
-                    <TableCell style={{ fontWeight: 600 }}>Category</TableCell>
-                    <TableCell style={{ fontWeight: 600 }}>Amount</TableCell>
-                    <TableCell style={{ fontWeight: 600 }}>Status</TableCell>
-                    <TableCell style={{ fontWeight: 600 }}>Submitted</TableCell>
+                <TableHead className="bg-gray-100">
+                  <TableRow>
+                    <TableCell className="font-semibold">Employee</TableCell>
+                    <TableCell className="font-semibold">Title</TableCell>
+                    <TableCell className="font-semibold">Category</TableCell>
+                    <TableCell className="font-semibold">Amount</TableCell>
+                    <TableCell className="font-semibold">Status</TableCell>
+                    <TableCell className="font-semibold">Submitted</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredExpenses.map((expense) => (
-                    <TableRow key={expense.id} hover>
+                    <TableRow key={expense.id} hover className="even:bg-gray-50">
                       <TableCell>
                         <p className="font-medium text-gray-900">{expense.employeeName}</p>
                       </TableCell>
                       <TableCell>
-                        <div>
+                        <div className="space-y-1">
                           <p className="font-medium text-gray-900">{expense.title}</p>
                           {expense.description && (
                             <p className="text-sm text-gray-500">{expense.description}</p>
@@ -132,9 +133,7 @@ export const TeamExpenses = () => {
                         <span className="capitalize text-gray-700">{expense.category}</span>
                       </TableCell>
                       <TableCell>
-                        <span className="font-medium text-gray-900">
-                          {formatAmount(expense.amount)}
-                        </span>
+                        <span className="font-medium text-gray-900">{formatAmount(expense.amount)}</span>
                       </TableCell>
                       <TableCell>
                         <Chip
@@ -144,9 +143,7 @@ export const TeamExpenses = () => {
                           sx={{ fontWeight: 600 }}
                         />
                       </TableCell>
-                      <TableCell className="text-gray-600">
-                        {formatDate(expense.submittedAt)}
-                      </TableCell>
+                      <TableCell className="text-gray-600">{formatDate(expense.submittedAt)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -155,6 +152,6 @@ export const TeamExpenses = () => {
           )}
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>
+  );
 };
