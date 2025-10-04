@@ -2,9 +2,35 @@ import User from "../models/userModel.js";
 import { generateRandomPassword, hashPassword } from "../utils/passwordGenerator.js";
 
 
-const sendEmailWithPassword = async (email, password) => {
 
-  console.log(`Send email to ${email} with password: ${password}`);
+ import nodemailer from "nodemailer";
+
+// Define transporter (Gmail with App Password)
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'aspirant885@gmail.com',   // your Gmail address
+    pass: 'ygbm tzhm crbe ercv'   // ⚠️ use Gmail App Password, not your real password
+  }
+});
+
+// Function to send email with password
+const sendEmailWithPassword = async (email, name, password) => {
+  const mailOptions = {
+    from: 'aspirant885@gmail.com',
+    to: email,
+    subject: 'Your Account Credentials',
+    text: `Hello ${name},\n\nYour account has been created.\n\nTemporary Password: ${password}\n\n⚠️ Please change your password after first login.\n\nThanks!`
+  };
+
+  try {
+    let info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+    return { success: true };
+  } catch (err) {
+    console.error('Email error:', err);
+    return { success: false, error: err };
+  }
 };
 
 export const addUserByAdmin = async (req, res) => {
@@ -43,7 +69,7 @@ export const addUserByAdmin = async (req, res) => {
     await newUser.save();
 
 
-    await sendEmailWithPassword(email, randomPassword);
+    await sendEmailWithPassword(email, name,randomPassword);
 
     return res.status(201).json({
       message: `${role} created successfully`,
