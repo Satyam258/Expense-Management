@@ -9,7 +9,7 @@ import { generateRandomPassword, hashPassword } from "../utils/passwordGenerator
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'aspirant885@gmail.com',   // your Gmail address
+    user: '',   // your Gmail address
     pass: 'ygbm tzhm crbe ercv'   // ⚠️ use Gmail App Password, not your real password
   }
 });
