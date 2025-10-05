@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import companyAdminRoutes from "./src/routes/adminCompanyRoutes.js";
 import userRoutes from "./src/routes/userRouter.js";
+import receiptRoutes from "./src/routes/receiptRoutes.js";
 
 const app = express();
 
