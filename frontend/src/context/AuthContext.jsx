@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext(undefined);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
+      // Replace with your actual backend API call for login
       const mockUser = {
         id: '1',
         email,
@@ -35,15 +36,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signup = async (email, password, fullName, role) => {
+  const signup = async (email, password, fullName, role, country, currency) => {
     setLoading(true);
     try {
+      // Here, call your backend API to create company and admin
+      const response = await fetch('http://localhost:4000/api/company-admin/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyName: fullName + "'s Company", // you can adjust company name logic
+          country,
+          default_currency: currency,
+          adminName: fullName,
+          adminEmail: email,
+          adminPassword: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to sign up');
+      }
+
+      // After successful signup, store user info (you can customize as needed)
       const newUser = {
-        id: Date.now().toString(),
-        email,
-        role, // assuming role is valid: 'employee' | 'manager' | 'admin'
-        fullName,
-        department: 'Engineering',
+        id: data.admin._id,
+        email: data.admin.email,
+        role: 'admin',
+        fullName: data.admin.name,
+        company: data.company.name,
       };
 
       localStorage.setItem('user', JSON.stringify(newUser));
@@ -70,8 +92,6 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  return context;
 };
